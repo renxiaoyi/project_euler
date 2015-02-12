@@ -1,8 +1,8 @@
 import math
 
 
-# Returns all primes <= "max_num".
 def Primes(max_num):
+  """Returns all primes <= 'max_num'."""
   is_prime = [True]*(max_num+1)
   is_prime[0] = False
   if max_num > 0: is_prime[1] = False
@@ -22,6 +22,58 @@ def TestPrimes():
     assert actual == expected
 
 
-if __name__ == "__main__":
+def PrimeFactors(num):
+  """Returns prime factors and their exponents of the given number."""
+  factors, exponents = [], []
+  primes = Primes(num)
+  for p in primes:
+    exp = 0
+    while num % p == 0 and num != 0:
+      num /= p
+      exp += 1
+    if exp > 0:
+      factors.append(p)
+      exponents.append(exp)
+    if num == 0:
+      break
+  return factors, exponents
+
+
+def TestPrimeFactors():
+  actual1, actual2 = PrimeFactors(1)
+  expected1, expected2 = [], []
+  assert actual1 == expected1, actual2 == expected2
+  actual1, actual2 = PrimeFactors(2)
+  expected1, expected2 = [2], [1]
+  assert actual1 == expected1, actual2 == expected2
+  actual1, actual2 = PrimeFactors(42)
+  expected1, expected2 = [2, 3, 7], [1, 1, 1]
+  assert actual1 == expected1, actual2 == expected2
+  actual1, actual2 = PrimeFactors(99)
+  expected1, expected2 = [3, 11], [2, 1]
+  assert actual1 == expected1, actual2 == expected2
+
+
+def Products(num, min_divisor=2):
+  """Naive method to generate all expressions of 'num' as a product of ints."""
+  if num == 1:
+    yield []
+  for divisor in range(min_divisor, num+1):
+    if num % divisor == 0:
+      for partial in Products(num/divisor, divisor):
+        yield partial + [divisor]
+
+
+def TestProducts():
+  actual = []
+  for product in Products(24):
+    actual.append('*'.join(map(str, product)))
+  expected = ['3*2*2*2', '6*2*2', '4*3*2', '12*2', '8*3', '6*4', '24']
+  assert actual == expected
+
+
+if __name__ == '__main__':
   TestPrimes()
-  print "pass"
+  TestPrimeFactors()
+  TestProducts()
+  print 'pass'
