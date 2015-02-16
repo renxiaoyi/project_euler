@@ -72,6 +72,14 @@ def TestProducts():
   assert actual == expected
 
 
+def Combination(n, k):
+  return math.factorial(n) / math.factorial(k) / math.factorial(n-k)
+
+
+def CominationWithRepetitions(n, k):
+  return Combination(n+k-1, k)
+
+
 if __name__ == '__main__':
   TestPrimes()
   TestPrimeFactors()
