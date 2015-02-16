@@ -16,7 +16,7 @@ def GetVariants(s):
 
 def AddSolutions(cube1, cube2):
   global cnt  # necessary before assignments
-  cwr = itertools.combinations_with_replacement
+  cwr = itertools.combinations
   cube1s = [cube1+list(x) for x in cwr('0123456789', 6-len(cube1))]
   cube2s = [cube2+list(x) for x in cwr('0123456789', 6-len(cube2))]
   for i in cube1s:
