@@ -87,6 +87,12 @@ def Product(iterable):
   return p
 
 
+def Area(a, b, c):
+  """Heron's formula."""
+  p = (a+b+c)/2
+  return math.sqrt(p*(p-a)*(p-b)*(p-c))
+
+
 if __name__ == '__main__':
   TestPrimes()
   TestPrimeFactors()
