@@ -80,6 +80,13 @@ def CominationWithRepetitions(n, k):
   return Combination(n+k-1, k)
 
 
+def Product(iterable):
+  p = 1
+  for n in iterable:
+    p *= n
+  return p
+
+
 if __name__ == '__main__':
   TestPrimes()
   TestPrimeFactors()
