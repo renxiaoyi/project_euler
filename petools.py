@@ -25,6 +25,7 @@ def _TestPrimes():
 
 def PrimeFactors(num, primes=None):
   """Returns prime factors and their exponents of the given number."""
+  assert num > 0
   if not primes:
     primes = Primes(num)
   factors, exponents = [], []
@@ -108,7 +109,6 @@ def DivisorsInter(factors, exponents):
 
 def Divisors(num, primes=None):
   """Returns a list of all divisors of the given number."""
-  assert num > 0
   factors, exponents = PrimeFactors(num, primes)
   return DivisorsInter(factors, exponents)
 
@@ -177,7 +177,26 @@ def _TestGroup():
   expected1, expected2 = [1, 2, 3], [1, 3, 1]
   assert actual1 == expected1
   assert actual2 == expected2
-  
+
+
+def SumOfDivisors(num, primes=None):
+  """Sum of positive divisors."""
+  factors, exponents = PrimeFactors(num, primes)
+  # http://en.wikipedia.org/wiki/Divisor_function.
+  sigma = 1
+  for i in range(len(factors)):
+    p, a = factors[i], exponents[i]
+    s = sum([p**e for e in range(a+1)])
+    sigma *= s
+  return sigma
+
+
+def _TestSumOfDivisors():
+  for i in range(1, 100):
+    expected = sum(Divisors(i))
+    actual = SumOfDivisors(i)
+    assert expected == actual
+
 
 if __name__ == '__main__':
   _TestPrimes()
@@ -186,4 +205,5 @@ if __name__ == '__main__':
   _TestDivisors()
   _TestGenComposites()
   _TestGroup()
+  _TestSumOfDivisors()
   print 'pass'

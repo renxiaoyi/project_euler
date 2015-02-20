@@ -15,12 +15,12 @@ def BruteForce():
   for i in range(1, max_num+1):
     if spd[i] >= 0:
       continue
-    spd[i] = sum(petools.Divisors(i, primes)) - i
+    spd[i] = petools.SumOfDivisors(i, primes) - i
     track = [i]
     j = spd[i]
     while j <= max_num and spd[j] < 0 and j not in track:
       track.append(j)
-      spd[j] = sum(petools.Divisors(j, primes)) - j
+      spd[j] = petools.SumOfDivisors(j, primes) - j
       j = spd[j]
     if j in track:  # e.g. track = [1, 2, 3, 4, 5], j = 3
       idx = track.index(j)
@@ -30,19 +30,7 @@ def BruteForce():
   print ans
 
 
-def Quick():
-  primes = petools.Primes(max_num)
-  spd = [-1]*(max_num+1)  # sum of proper divisors
-  spd[0] = 0
-  spd[1] = 0
-  for i in primes:
-    spd[i] = 1
-  for n, f in petools.GenComposites(primes, max_num):
-    spd[n] = sum(petools.DivisorsInter(*petools.Group(f))) - n
-
-  for i in range(len(spd)):
-    assert spd[i] > -1
-
+def FindChain(spd):
   chains = [-1]*(max_num+1)
   ans = (0, [])
   for i in range(max_num+1):
@@ -67,4 +55,26 @@ def Quick():
         ans = (chain_length, track[idx_t:])
   print ans
 
-Quick()
+
+def Quick():
+  primes = petools.Primes(max_num)
+  spd = [-1]*(max_num+1)  # sum of proper divisors
+  spd[0] = 0
+  spd[1] = 0
+  for i in primes:
+    spd[i] = 1
+  for n, f in petools.GenComposites(primes, max_num):
+    spd[n] = sum(petools.DivisorsInter(*petools.Group(f))) - n
+  FindChain(spd)
+
+
+def Optimized():
+  spd = [0]*(max_num+1)  # sum of proper divisors
+  for i in range(1, max_num+1):
+    spd[i] -= i
+    for j in range(i, max_num+1, i):
+      spd[j] += i
+  FindChain(spd)
+
+
+Optimized()
