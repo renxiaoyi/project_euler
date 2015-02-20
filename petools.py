@@ -198,6 +198,14 @@ def _TestSumOfDivisors():
     assert expected == actual
 
 
+def Flatten(matrix):
+  """Flattens a 2d array 'matrix' to an array."""
+  array = []
+  for a in matrix:
+    array += a
+  return array
+
+
 if __name__ == '__main__':
   _TestPrimes()
   _TestPrimeFactors()
