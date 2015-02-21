@@ -206,6 +206,28 @@ def Flatten(matrix):
   return array
 
 
+def MulMod(a, b, m):
+  if a >= m:
+    a %= m
+  if b >= m:
+    b %= m
+  return a*b%m
+
+
+def PowMod(a, e, m):
+  if e == 0:
+    return 1%m
+  if e == 1:
+    return a%m
+  return MulMod(PowMod(a, e/2, m), PowMod(a, e-e/2, m), m)
+
+
+def _TestPowMod():
+  for e in range(20):
+    assert 2**e%11 == PowMod(2, e, 11)
+    assert 3**e%11 == PowMod(3, e, 11)
+
+
 if __name__ == '__main__':
   _TestPrimes()
   _TestPrimeFactors()
@@ -214,4 +236,5 @@ if __name__ == '__main__':
   _TestGenComposites()
   _TestGroup()
   _TestSumOfDivisors()
+  _TestPowMod()
   print 'pass'
