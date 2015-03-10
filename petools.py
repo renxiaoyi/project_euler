@@ -12,15 +12,43 @@ def Primes(max_num):
     while i*f <= max_num:
       is_prime[i*f] = False
       f += 1
-  return set([x for x in range(max_num+1) if is_prime[x]])
+  return [x for x in range(max_num+1) if is_prime[x]]
 
 
 def _TestPrimes():
   primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
   for i in range(50):
     actual = Primes(i)
-    expected = set([x for x in primes if x <= i])
+    expected = [x for x in primes if x <= i]
     assert actual == expected
+
+
+def IsPrime(num, primes=None):
+  if num <= 1:
+    return False
+  sq = int(math.sqrt(num)) + 1
+  if not primes:
+    i = 2
+    while i < sq:
+      if num%i == 0:
+        return False
+      i += 1
+    return True
+  else:
+    for p in primes:  # primes should be sorted
+      if p >= sq:
+        return True
+      if num%p == 0:
+        return False
+    return True
+
+
+def _TestIsPrime():
+  max_num = 1000
+  primes = Primes(max_num)
+  for n in range(max_num):
+    a, b, c = IsPrime(n), IsPrime(n, primes), (n in primes)
+    assert a == b == c
 
 
 def PrimeFactors(num, primes=None):
@@ -143,8 +171,6 @@ def GenComposites(primes, max_num):
       if len(factors) == 0 or p >= factors[-1]:
         for n, f in Try(factors+[p]):
           yield n, f
-  primes = list(primes)
-  primes.sort()
   return Try([])
 
 
@@ -228,8 +254,58 @@ def _TestPowMod():
     assert 3**e%11 == PowMod(3, e, 11)
 
 
+def Permutations(seq):
+  """Yield only unique permutations of seq in an efficient way.
+
+  http://stackoverflow.com/questions/12836385
+  """
+  # Precalculate the indices we'll be iterating over for speed
+  i_indices = range(len(seq) - 1, -1, -1)
+  k_indices = i_indices[1:]
+
+  # The algorithm specifies to start with a sorted version
+  seq = sorted(seq)
+
+  while True:
+    yield seq
+
+    # Working backwards from the last-but-one index,           k
+    # we find the index of the first decrease in value.  0 0 1 0 1 1 1 0
+    for k in k_indices:
+      if seq[k] < seq[k + 1]:
+        break
+    else:
+      # Introducing the slightly unknown python for-else syntax:
+      # else is executed only if the break statement was never reached.
+      # If this is the case, seq is weakly decreasing, and we're done.
+      return
+
+    # Get item from sequence only once, for speed
+    k_val = seq[k]
+
+    # Working backwards starting with the last item,           k     i
+    # find the first one greater than the one at k       0 0 1 0 1 1 1 0
+    for i in i_indices:
+      if k_val < seq[i]:
+        break
+
+    # Swap them in the most efficient way
+    (seq[k], seq[i]) = (seq[i], seq[k])                #       k     i
+                                                       # 0 0 1 1 1 1 0 0
+
+    # Reverse the part after but not                           k
+    # including k, also efficiently.                     0 0 1 1 0 0 1 1
+    seq[k + 1:] = seq[-1:k:-1]
+
+
+def _TestPermutations():
+  perm = set([','.join(p) for p in Permutations(['1', '2', '1'])])
+  assert perm == set(['1,1,2', '1,2,1', '2,1,1'])
+
+
 if __name__ == '__main__':
   _TestPrimes()
+  _TestIsPrime()
   _TestPrimeFactors()
   _TestProducts()
   _TestDivisors()
@@ -237,4 +313,5 @@ if __name__ == '__main__':
   _TestGroup()
   _TestSumOfDivisors()
   _TestPowMod()
+  _TestPermutations()
   print 'pass'
