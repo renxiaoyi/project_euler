@@ -7,8 +7,8 @@ def PermBlocks(m, n):
     return 0
   else:
     return (PermBlocks(m, n-1)  # black first
-            + PermBlocks(m, n-m)  # red first + black
-            + 1)  # only one red
+            + PermBlocks(m, n-m)  # colored first + black
+            + 1)  # only one colored
 
 
 n = 50
