@@ -303,6 +303,17 @@ def _TestPermutations():
   assert perm == set(['1,1,2', '1,2,1', '2,1,1'])
 
 
+class Memorize(object):
+  def __init__(self, f):
+    self.func = f
+    self.memo = {}
+
+  def __call__(self, *args):
+    if not args in self.memo:
+      self.memo[args] = self.func(*args)
+    return self.memo[args]
+
+
 if __name__ == '__main__':
   _TestPrimes()
   _TestIsPrime()
