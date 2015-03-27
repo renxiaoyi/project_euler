@@ -17,7 +17,7 @@ def IsPow(m, n):
 def Find(nd):  # nd: num of digits
   assert nd >= 2
   ret = set()
-  for sd in range(2, 9*nd):  # ds: sum of digits
+  for sd in range(2, 9*nd):  # sd: sum of digits
     cand = sd
     while True:
       if cand <= 10**(nd-1):
