@@ -241,6 +241,7 @@ def MulMod(a, b, m):
 
 
 def PowMod(a, e, m):
+  """Deprecated. Use pow(a, e, m) instead."""
   if e == 0:
     return 1%m
   if e == 1:
