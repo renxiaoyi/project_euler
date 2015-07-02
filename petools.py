@@ -315,6 +315,10 @@ class Memorize(object):
     return self.memo[args]
 
 
+def IsPalindrome(s):
+  return s == s[::-1]
+
+
 if __name__ == '__main__':
   _TestPrimes()
   _TestIsPrime()
