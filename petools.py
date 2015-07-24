@@ -26,6 +26,8 @@ def _TestPrimes():
 def IsPrime(num, primes=None):
   if num <= 1:
     return False
+  if num == 2 or num == 3:
+    return True
   sq = int(math.sqrt(num)) + 1
   if not primes:
     i = 2
