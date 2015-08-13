@@ -1,6 +1,6 @@
 def Undividable(n, m):
   # Returns True if n divides none of {1, 11, 111, ... R(m)}.
-  r = 1  # remainder 10^i % n
+  r = 1  # remainder 10^(i-1) % n
   rem = 1 # remainder R(i) % n
   for i in xrange(2, m+1):
     r = 10*r % n
