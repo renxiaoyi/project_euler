@@ -321,6 +321,27 @@ def IsPalindrome(s):
   return s == s[::-1]
 
 
+def ExtendedGcd(a, b):
+  # To find the greatest common divisor of a and b, use fractions.gcd(a, b).
+  # This method returns (x, y, gcd), where a*x + b*y = gcd.
+  s, old_s = 0, 1
+  t, old_t = 1, 0
+  r, old_r = b, a
+  while r != 0:
+    q = old_r / r
+    old_r, r = r, old_r - q*r
+    old_s, s = s, old_s - q*s
+    old_t, t = t, old_t - q*t
+  return old_s, old_t, old_r
+
+def _TestExtendedGcd():
+  a, b = 240, 46
+  x, y, c = ExtendedGcd(a, b)
+  assert (x, y, c) == (-9, 47, 2)
+  a, b = 3, 11
+  x, y, c = ExtendedGcd(a, b)
+  assert (x, y, c) == (4, -1, 1)
+
 if __name__ == '__main__':
   _TestPrimes()
   _TestIsPrime()
@@ -332,4 +353,5 @@ if __name__ == '__main__':
   _TestSumOfDivisors()
   _TestPowMod()
   _TestPermutations()
+  _TestExtendedGcd()
   print 'pass'
