@@ -1,6 +1,6 @@
 import itertools
 import math
-
+from random import randrange
 
 def Primes(max_num):
   """Returns all primes <= 'max_num'."""
@@ -28,30 +28,58 @@ def IsPrime(num, primes=None):
     return False
   if num == 2 or num == 3:
     return True
-  sq = int(math.sqrt(num)) + 1
-  if not primes:
-    i = 2
-    while i < sq:
-      if num%i == 0:
-        return False
-      i += 1
-    return True
+  if num % 2 == 0 or num % 3 == 0:
+    return False
+  if primes:
+    for p in primes:  # a sorted and complete array of primes in (1, x)
+      if num < p*p: return True
+      if num%p == 0: return False
+    q = max(primes[-1], 3)
   else:
-    for p in primes:  # primes should be sorted
-      if p >= sq:
-        return True
-      if num%p == 0:
-        return False
-    return True
-
+    q = 3
+  while q*q <= num:
+    if num%q == 0:
+      return False
+    q += 2
+  return True
 
 def _TestIsPrime():
-  max_num = 1000
+  max_num = 10000
   primes = Primes(max_num)
   for n in range(max_num):
     a, b, c = IsPrime(n), IsPrime(n, primes), (n in primes)
+    if (not a == b == c):
+      print n, a, b, c
     assert a == b == c
 
+_small_primes = Primes(1000)
+
+def RabinMiller(n, k):
+  """Returns True if n passes k rounds of the Miller-Rabin primality test.
+  Return False if n is proved to be composite.
+
+  Source: http://stackoverflow.com/questions/14613304
+  """
+  if n < 2: return False
+  for p in _small_primes:
+    if n < p * p: return True
+    if n % p == 0: return False
+  r, s = 0, n - 1
+  while s % 2 == 0:
+    r += 1
+    s //= 2
+  for _ in range(k):
+    a = randrange(2, n - 1)
+    x = pow(a, s, n)
+    if x == 1 or x == n - 1:
+      continue
+    for _ in range(r - 1):
+      x = pow(x, 2, n)
+      if x == n - 1:
+        break
+    else:
+      return False
+  return True
 
 def PrimeFactors(num, primes=None):
   """Returns prime factors and their exponents of the given number."""
